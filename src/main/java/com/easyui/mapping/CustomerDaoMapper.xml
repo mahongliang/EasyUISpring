@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.easyui.dao.CustomerDao">
+
+	<resultMap id="BaseResultMap" type="com.easyui.entity.Customer">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="zipcode" property="zipcode" jdbcType="VARCHAR" />
+		<result column="fax" property="fax" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+
+	<select id="findAll" resultMap="BaseResultMap">
+		select id,name,address,zipcode,fax
+		from customer
+	</select>
+
+
+	<insert id="insert" parameterType="com.easyui.entity.Customer">
+		insert into customer (id, name, address,zipcode,fax)
+		values (#{id}, #{name}, #{address}, #{zipcode},#{fax})
+	</insert>
+
+	<delete id="deleteById" parameterType="java.lang.Integer">
+		delete from customer
+		where id = #{id}
+	</delete>
+
+	<update id="update" parameterType="com.easyui.entity.Customer">
+		update customer
+		<set>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="address != null">
+				address = #{address},
+			</if>
+			<if test="zipcode != null">
+				zipcode = #{zipcode},
+			</if>
+			<if test="fax != null">
+				fax = #{fax},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<select id="getTotalRows" resultType="java.lang.Long">
+		select count(1) from customer;	
+	</select>
+	
+	<select id="findByPage" resultMap = "BaseResultMap" parameterType="com.easyui.dto.PageHelper">
+		select t.id,t.name,t.address,t.zipcode,t.fax from customer t where 1=1
+		<if test="sort != null and sort != ''">
+            order by #{sort} #{order}
+        </if>
+        <if test="page > 0">
+            limit #{start},#{end}
+        </if>
+	</select>
+
+</mapper>
